@@ -12,25 +12,29 @@
 
       // URLが既に変換済みかどうかをチェック
       if (!l.pathname.includes("/?/") && !l.search.includes("~and~")) {
-        l.replace(
+        const newUrl =
           l.protocol +
-            "//" +
-            l.hostname +
-            (l.port ? ":" + l.port : "") +
-            l.pathname
-              .split("/")
-              .slice(0, 1 + pathSegmentsToKeep)
-              .join("/") +
-            "/?/" +
-            l.pathname
-              .slice(1)
-              .split("/")
-              .slice(pathSegmentsToKeep)
-              .join("/")
-              .replace(/&/g, "~and~") +
-            (l.search ? "&" + l.search.slice(1).replace(/&/g, "~and~") : "") +
-            l.hash
-        );
+          "//" +
+          l.hostname +
+          (l.port ? ":" + l.port : "") +
+          l.pathname
+            .split("/")
+            .slice(0, 1 + pathSegmentsToKeep)
+            .join("/") +
+          "/?/" +
+          l.pathname
+            .slice(1)
+            .split("/")
+            .slice(pathSegmentsToKeep)
+            .join("/")
+            .replace(/&/g, "~and~") +
+          (l.search ? "&" + l.search.slice(1).replace(/&/g, "~and~") : "") +
+          l.hash;
+
+        // リダイレクトを1回だけ行う
+        if (l.href !== newUrl) {
+          l.replace(newUrl);
+        }
       }
     </script>
     <script type="module" crossorigin src="/react-todo-app/assets/main-JwbFJ5-Z.js"></script>
