@@ -20,14 +20,16 @@ const TodoList = (props: Props) => {
   }
 
   return (
-    <div className="space-y-2">
+    <div className={"space-y-2"}>
       {todos.map((todo) => (
-        <TodoItem
-          key={todo.id}
-          todo={todo}
-          remove={props.remove}
-          updateIsDone={props.updateIsDone}
-        />
+        <div style={{ border: "2px solid black", padding: "10px" }}>
+          <TodoItem
+            key={todo.id}
+            todo={todo}
+            remove={props.remove}
+            updateIsDone={props.updateIsDone}
+          />
+        </div>
       ))}
     </div>
   );

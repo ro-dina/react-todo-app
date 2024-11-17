@@ -9,8 +9,11 @@
     <script type="text/javascript">
       var pathSegmentsToKeep = 1;
       var l = window.location;
-      l.replace(
-        l.protocol +
+
+      // URLが既に変換済みかどうかをチェック
+      if (!l.pathname.includes("/?/") && !l.search.includes("~and~")) {
+        const newUrl =
+          l.protocol +
           "//" +
           l.hostname +
           (l.port ? ":" + l.port : "") +
@@ -26,8 +29,13 @@
             .join("/")
             .replace(/&/g, "~and~") +
           (l.search ? "&" + l.search.slice(1).replace(/&/g, "~and~") : "") +
-          l.hash
-      );
+          l.hash;
+
+        // リダイレクトを1回だけ行う
+        if (l.href !== newUrl) {
+          l.replace(newUrl);
+        }
+      }
     </script>
   </head>
   <body>

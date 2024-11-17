@@ -3,5 +3,6 @@ export type Todo = {
   name: string;
   isDone: boolean;
   priority: number;
+  time: number;
   deadline: Date | null; // 注意
 };

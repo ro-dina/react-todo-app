@@ -13,6 +13,7 @@ const App = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [newTodoName, setNewTodoName] = useState("");
   const [newTodoPriority, setNewTodoPriority] = useState(3);
+  const [value, setValue] = useState(0);
   const [newTodoDeadline, setNewTodoDeadline] = useState<Date | null>(null);
   const [newTodoNameError, setNewTodoNameError] = useState("");
   const [initialized, setInitialized] = useState(false); // ◀◀ 追加
@@ -44,8 +45,8 @@ const App = () => {
   const uncompletedCount = todos.filter((todo: Todo) => !todo.isDone).length;
 
   const isValidTodoName = (name: string): string => {
-    if (name.length < 2 || name.length > 32) {
-      return "2文字以上、32文字以内で入力してください";
+    if (name.length > 32) {
+      return "32文字以内で入力してください";
     } else {
       return "";
     }
@@ -60,6 +61,11 @@ const App = () => {
     setNewTodoPriority(Number(e.target.value));
   };
 
+  //スライダ
+  const setNewTodotime = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(Number(e.target.value));
+  };
+
   const updateDeadline = (e: React.ChangeEvent<HTMLInputElement>) => {
     const dt = e.target.value; // UIで日時が未設定のときは空文字列 "" が dt に格納される
     console.log(`UI操作で日時が "${dt}" (${typeof dt}型) に変更されました。`);
@@ -68,6 +74,9 @@ const App = () => {
 
   const addNewTodo = () => {
     // ▼▼ 編集
+    const normalizedName =
+      newTodoName.length === 0 ? "名称未設定のタスク" : newTodoName;
+
     const err = isValidTodoName(newTodoName);
     if (err !== "") {
       setNewTodoNameError(err);
@@ -75,9 +84,10 @@ const App = () => {
     }
     const newTodo: Todo = {
       id: uuid(),
-      name: newTodoName,
+      name: normalizedName,
       isDone: false,
       priority: newTodoPriority,
+      time: value,
       deadline: newTodoDeadline,
     };
     const updatedTodos = [...todos, newTodo];
@@ -108,6 +118,21 @@ const App = () => {
     setTodos(updatedTodos);
   };
 
+  //sort
+  const sortByPriority = () => {
+    const sortedTodos = [...todos].sort((a, b) => a.priority - b.priority);
+    setTodos(sortedTodos);
+  };
+
+  const sortByDeadline = () => {
+    const sortedTodos = [...todos].sort((a, b) => {
+      const dateA = a.deadline ? new Date(a.deadline).getTime() : Infinity;
+      const dateB = b.deadline ? new Date(b.deadline).getTime() : Infinity;
+      return dateA - dateB;
+    });
+    setTodos(sortedTodos);
+  };
+
   return (
     <div className="mx-4 mt-10 max-w-2xl md:mx-auto">
       <h1 className="mb-4 text-2xl font-bold">TodoApp</h1>
@@ -123,11 +148,25 @@ const App = () => {
         type="button"
         onClick={removeCompletedTodos}
         className={
-          "mt-5 rounded-md bg-red-500 px-3 py-1 font-bold text-white hover:bg-red-600"
+          "my-4 rounded-md bg-red-500 px-3 py-1 font-bold text-white hover:bg-red-600"
         }
       >
         完了済みのタスクを削除
       </button>
+      <div className="mb-4 flex space-x-4">
+        <button
+          onClick={sortByPriority}
+          className="rounded-md bg-blue-500 px-4 py-2 text-white"
+        >
+          優先度順
+        </button>
+        <button
+          onClick={sortByDeadline}
+          className="rounded-md bg-blue-500 px-4 py-2 text-white"
+        >
+          期日順にソート
+        </button>
+      </div>
 
       <div className="mt-5 space-y-2 rounded-md border p-3">
         <h2 className="text-lg font-bold">新しいタスクの追加</h2>
@@ -146,7 +185,7 @@ const App = () => {
                 "grow rounded-md border p-2",
                 newTodoNameError && "border-red-500 outline-red-500"
               )}
-              placeholder="2文字以上、32文字以内で入力してください"
+              placeholder="32文字以内で入力してください"
             />
           </div>
           {newTodoNameError && (
@@ -176,6 +215,22 @@ const App = () => {
               <span>{value}</span>
             </label>
           ))}
+        </div>
+
+        <div className="p-4">
+          <label htmlFor="slider" className="mb-2 block">
+            時間: {value}
+          </label>
+          <input
+            id="slider"
+            type="range"
+            min="0"
+            max="1140"
+            step="30"
+            value={value}
+            onChange={setNewTodotime}
+            className="w-full"
+          />
         </div>
 
         <div className="flex items-center gap-x-2">
