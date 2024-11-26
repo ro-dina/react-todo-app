@@ -13,7 +13,7 @@ const App = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [newTodoName, setNewTodoName] = useState("");
   const [newTodoPriority, setNewTodoPriority] = useState(3);
-  const [value, setValue] = useState(0);
+  const [newTodoTime, setValue] = useState(0);
   const [newTodoDeadline, setNewTodoDeadline] = useState<Date | null>(null);
   const [newTodoNameError, setNewTodoNameError] = useState("");
   const [initialized, setInitialized] = useState(false); // ◀◀ 追加
@@ -87,7 +87,7 @@ const App = () => {
       name: normalizedName,
       isDone: false,
       priority: newTodoPriority,
-      time: value,
+      time: newTodoTime,
       deadline: newTodoDeadline,
     };
     const updatedTodos = [...todos, newTodo];
@@ -219,15 +219,19 @@ const App = () => {
 
         <div className="p-4">
           <label htmlFor="slider" className="mb-2 block">
-            時間: {value}
+            <p>
+              {newTodoTime === 0
+                ? "どの程度かかるか未定"
+                : `時間 : ${newTodoTime}時間`}
+            </p>
           </label>
           <input
             id="slider"
             type="range"
             min="0"
-            max="1140"
-            step="30"
-            value={value}
+            max="24"
+            step="0.5"
+            value={newTodoTime}
             onChange={setNewTodotime}
             className="w-full"
           />

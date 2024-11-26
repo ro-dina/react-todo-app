@@ -49,6 +49,11 @@ const TodoItem = (props: Props) => {
           {todo.deadline
             ? `期日： ${dayjs(todo.deadline).format("YYYY年M月D日 H時m分")}`
             : "期日なし"}
+
+          {/*時間*/}
+          <div className="space-x-4 text-sm text-gray-500">
+            {todo.time ? `推定: ${todo.time}時間` : "どの程度かかるか未定"}
+          </div>
         </div>
       </div>
 
