@@ -15,6 +15,7 @@ const App = () => {
   const [newTodoPriority, setNewTodoPriority] = useState(3);
   const [newTodoTime, setValue] = useState(0);
   const [newTodoDeadline, setNewTodoDeadline] = useState<Date | null>(null);
+  const [TaskTag, setTaskTag] = useState(2);
   const [newTodoNameError, setNewTodoNameError] = useState("");
   const [initialized, setInitialized] = useState(false); // ◀◀ 追加
   const localStorageKey = "TodoApp"; // ◀◀ 追加
@@ -61,6 +62,17 @@ const App = () => {
     setNewTodoPriority(Number(e.target.value));
   };
 
+  const updateNewTaskTag = (e: React.ChangeEvent<HTMLInputElement>) => {
+    switch (e.target.value) {
+      case "普通のタスク":
+        setTaskTag(1);
+        break;
+      case "デイリー":
+        setTaskTag(2);
+        break;
+    }
+  };
+
   //スライダ
   const setNewTodotime = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(Number(e.target.value));
@@ -89,12 +101,14 @@ const App = () => {
       priority: newTodoPriority,
       time: newTodoTime,
       deadline: newTodoDeadline,
+      tag: TaskTag,
     };
     const updatedTodos = [...todos, newTodo];
     setTodos(updatedTodos);
     setNewTodoName("");
     setNewTodoPriority(3);
     setNewTodoDeadline(null);
+    setTaskTag(2);
   };
 
   const updateIsDone = (id: string, value: boolean) => {
@@ -133,6 +147,11 @@ const App = () => {
     setTodos(sortedTodos);
   };
 
+  const sortByTag = () => {
+    const sortedTodos = [...todos].sort((a, b) => a.tag - b.tag);
+    setTodos(sortedTodos);
+  };
+
   return (
     <div className="mx-4 mt-10 max-w-2xl md:mx-auto">
       <h1 className="mb-4 text-2xl font-bold">TodoApp</h1>
@@ -164,7 +183,13 @@ const App = () => {
           onClick={sortByDeadline}
           className="rounded-md bg-blue-500 px-4 py-2 text-white"
         >
-          期日順にソート
+          期日順
+        </button>
+        <button
+          onClick={sortByTag}
+          className="rounded-md bg-blue-500 px-4 py-2 text-white"
+        >
+          タグの分類
         </button>
       </div>
 
@@ -237,7 +262,7 @@ const App = () => {
           />
         </div>
 
-        <div className="flex items-center gap-x-2">
+        <div className="flex items-center gap-2">
           <label htmlFor="deadline" className="font-bold">
             期限
           </label>
@@ -252,6 +277,23 @@ const App = () => {
             onChange={updateDeadline}
             className="rounded-md border border-gray-400 px-2 py-0.5"
           />
+        </div>
+
+        <div className="flex items-center gap-x-2">
+          <div className="font-bold">タスクの種類</div>
+          {["普通のタスク", "デイリー"].map((value, index) => (
+            <label key={value} className="flex items-center space-x-2">
+              <input
+                id={`tag-${value}`}
+                name="TagGroup"
+                type="radio"
+                value={value}
+                checked={TaskTag === index + 1}
+                onChange={updateNewTaskTag}
+              />
+              <span>{value}</span>
+            </label>
+          ))}
         </div>
 
         <button

@@ -22,7 +22,13 @@ const TodoList = (props: Props) => {
   return (
     <div className={"space-y-2"}>
       {todos.map((todo) => (
-        <div style={{ border: "2px solid black", padding: "10px" }}>
+        <div
+          style={{
+            border: "1px solid black",
+            padding: "10px",
+            borderRadius: "5px",
+          }}
+        >
           <TodoItem
             key={todo.id}
             todo={todo}

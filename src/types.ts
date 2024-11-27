@@ -5,4 +5,5 @@ export type Todo = {
   priority: number;
   time: number;
   deadline: Date | null; // 注意
+  tag: number;
 };

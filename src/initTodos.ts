@@ -9,6 +9,7 @@ export const initTodos: Todo[] = [
     priority: 2,
     time: 1,
     deadline: new Date(2024, 10, 2, 17, 30),
+    tag: 1,
   },
   {
     id: uuid(),
@@ -17,6 +18,7 @@ export const initTodos: Todo[] = [
     priority: 3,
     time: 1,
     deadline: null, // このTodoには期限を設定しない
+    tag: 1,
   },
   {
     id: uuid(),
@@ -25,5 +27,6 @@ export const initTodos: Todo[] = [
     priority: 1,
     time: 1,
     deadline: new Date(2024, 10, 11),
+    tag: 1,
   },
 ];
